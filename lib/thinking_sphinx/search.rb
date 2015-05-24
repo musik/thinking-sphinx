@@ -932,14 +932,14 @@ module ThinkingSphinx
       index_options = klass.sphinx_index_options
 
       ids = matches.collect { |match| match[:attributes]["sphinx_internal_id"] }
-      instances = ids.length > 0 ? klass.unscoped.find(
-        :all,
-        :joins      => options[:joins],
-        :conditions => {klass.primary_key_for_sphinx.to_sym => ids},
-        :include    => include_for_class(klass),
-        :select     => (options[:select]  || index_options[:select]),
-        :order      => (options[:sql_order] || index_options[:sql_order])
-      ) : []
+      instances = ids.length > 0 ?
+        klass.unscoped.joins(options[:joins]).
+          #TODO 
+          # select(options[:select]  || index_options[:select]).
+          where({klass.primary_key_for_sphinx.to_sym => ids}).
+          includes(include_for_class(klass)).
+          order(options[:sql_order] || index_options[:sql_order]) :
+        []
 
       # Raise an exception if we find records in Sphinx but not in the DB, so
       # the search method can retry without them. See
