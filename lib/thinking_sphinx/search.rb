@@ -935,7 +935,7 @@ module ThinkingSphinx
       instances = ids.length > 0 ?
         klass.unscoped.joins(options[:joins]).
           #TODO 
-          # select(options[:select]  || index_options[:select]).
+          select(options[:select]  || index_options[:select] || "*").
           where({klass.primary_key_for_sphinx.to_sym => ids}).
           includes(include_for_class(klass)).
           order(options[:sql_order] || index_options[:sql_order]) :
