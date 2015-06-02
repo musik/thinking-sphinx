@@ -38,7 +38,7 @@ module ThinkingSphinx
     #   Association.children(User, :pages, user_association)
     # 
     def self.children(klass, assoc, parent=nil)
-      ref = klass.reflect_on_association(assoc)
+      ref = assoc.present? ? klass.reflect_on_association(assoc) : nil
       
       return [] if ref.nil?
       return [Association.new(parent, ref)] unless ref.options[:polymorphic]
